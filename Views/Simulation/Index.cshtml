@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
+<h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>
+<hr />
+@*<h2 class="text-center">Queue Simulation</h2>*@
+
+<div class="row">
+
+    <div id="myForm" style="position: relative; right: 100px">
+        <div class="col-md-4">
+            <div class="jumbotron" style="border: 1px solid gray;">
+                <p class="lead"><b>Select No.Of Servers</b></p>
+                <select id="servers" name="NoOfServers" class="form-select" aria-label="Default select example" style="margin-left: 10px; font-size: 1.5rem;">
+                    <option selected>Select Servers</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <br />
+                <br />
+                <p class="lead"><b>Enter Customers:</b></p>
+                <input id="customers" name="NoOfCustomers" style="margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />
+                <br />
+                <br />
+                <p class="lead"><b>Enter Inter-Arrival:</b></p>
+                <input id="iat" name="MIAT" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
+                <br />
+                <br />
+                <p class="lead"><b>Enter Service Time:</b></p>
+                <input id="st" name="MST" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
+                <br />
+                <br />
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="jumbotron" style="height:48.5rem; width: 100rem; overflow:scroll; border: 1px solid gray;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Customers</th>
+                            <th scope="col">InterArrival Time</th>
+                            <th scope="col">Arrival Time</th>
+                            <th scope="col">Service Time</th>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">End Time</th>
+                            <th scope="col">Turnaround Time</th>
+                            <th scope="col">Wait Time</th>
+                            <th scope="col">Server</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableRowData" class="text-center">
+                        @*table data is appended through jquery here*@
+                    </tbody>
+                </table>
+                <h2 id="noData" class="text-center" style="position: relative; top: 100px; color: gray">No Data To Show</h2>
+                <div id="myLoader" hidden class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="text-center">
+    <input style="background-color:darkslategrey; color: white;" type="submit" id="btn" onclick="sub();" value="Run Simulation" class="btn btn-default" />
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    function sub() {
+        $("#tableRowData").empty();
+        $("#noData").hide();
+        $("#myLoader").show();
+        $("#myLoader").removeAttr('hidden');
+        debugger;
+        var inputData = {
+            NoOfServers: $("#servers option:selected").val(),
+            NoOfCustomers: $("#customers").val(),
+            MIAT: $("#iat").val(),
+            MST: $("#st").val()
+
+        }
+        $.ajax(
+            {
+                type: "POST",
+                url: '@Url.Action("Index", "Simulation")',
+                data: JSON.stringify(inputData),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    $("#myLoader").hide();
+                    for (var i = 0; i < data.length; i++) {
+                        var cust = i + 1;
+                        $("#tableRowData").append('<tr><td>C' + cust + '</td><td>' + data[i].interArrival + '</td><td>' + data[i].arrival + '</td><td>' + data[i].serviceTime + '</td><td>' + data[i].startTime + '</td><td>' + data[i].endTime + '</td><td>' + data[i].turnaroundTime + '</td><td>' + data[i].waitTime + '</td><td>' + data[i].server + '</td></tr>')
+                    }
+                }
+            });
+    }
+</script>

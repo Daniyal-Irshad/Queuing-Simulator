@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
+<h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>
+<hr />
+<div class="row">
+    @using (Html.BeginForm("Details", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <div style="display: flex; justify-content: center; align-items: center; flex-flow: column;">
+                <h3><label><b>Select No Of Servers</b></label></h3>
+                <select name="NoOfServers" class="form-select" aria-label="Default select example" style="width: 132px; font-size: 1.5rem;">
+                    <option selected>Select Servers</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+            </div>
+            <br />
+            <div class="col-md-6">
+                <div class="jumbotron" style="border: 1px solid gray;">
+                    <p class="lead"><b>Select Inter-Arrival Distribution:</b></p>
+                    <select name="IATDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="margin-left: 10px; font-size: 1.5rem;">
+                        <option selected>Select Distribution</option>
+                        <option value="M">Exponential</option>
+                        <option value="G">Gamma</option>
+                        <option value="G">Uniform</option>
+                        <option value="G">Normal</option>
+                    </select>
+                    <br />
+
+                    <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
+                    <input name="MIAT" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
+                    <br />
+                    <br />
+
+                    <p class="lead"><b>Enter Variance of Inter Arrival:</b></p>
+                    <input name="Variance_IA" disabled="disabled" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2a)" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="jumbotron" style="border: 1px solid gray;">
+                    <p class="lead"><b>Select Service-Time Distribution:</b></p>
+                    <select name="STDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="margin-left: 10px; font-size: 1.5rem;">
+                        <option selected>Select Distribution</option>
+                        <option value="M">Exponential</option>
+                        <option value="G">Gamma</option>
+                        <option value="G">Uniform</option>
+                        <option value="G">Normal</option>
+                    </select>
+                    <br />
+
+                    <p class="lead"><b>Enter Service Time:</b></p>
+                    <input name="MST" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
+                    <br />
+                    <br />
+
+                    <p class="lead"><b>Enter Variance of Service Time:</b></p>
+                    <input name="Variance_S" disabled="disabled" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2s)" />
+                </div>
+            </div>
+            <input name="BtnName" type="text" id="dis" style="display:none;" />
+            <div class="text-center">
+                <input style="background-color:darkslategrey; color: white;" type="submit" id="btn" onclick="sub();" value="Calculate Performance Measure" class="btn btn-default" />
+            </div>
+            @*<div class="text-center">
+                    <input style="background-color:darkslategrey; color: white;" type="submit" id="btn1" onclick="sub();" value="Simulate Random Numbers" class="btn btn-default" />
+                </div>*@
+        </div>
+    }
+    @*<br />
+        <br />
+        <div id="pm" class="jumbotron text-center" style="display:none">
+            <h2><b><u>Performance Measure</u></b></h2>
+            <br />
+            <p class="lead"><b>Service-Time : ViewBag.Data[0]</b></p>
+            <p class="lead"><b>InterArrival-Time : 32</b></p>
+            <p class="lead"><b>Arrival-Time : 45</b></p>
+            <p class="lead"><b>Queue-Length : 4</b></p>
+
+        </div>*@
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $("form").submit(function () {
+        debugger;
+        //var ss = document.getElementById("btn").value;
+        //$("#dis").val(ss);
+    });
+
+    $('select[name="IATDis"]').change(function () {
+        debugger;
+        iad = $("select[name='IATDis'] option:selected").val();
+        if (iad == "G") {
+            $("select[name='STDis'] option[value='M']").remove();
+            $("input[name='Variance_IA']").prop("disabled", false)
+        }
+    });
+
+    $('select[name="STDis"]').change(function () {
+        debugger;
+        sd = $("select[name='STDis'] option:selected").val();
+        if (sd == "G") {
+            $("input[name='Variance_S']").prop("disabled", false)
+        }
+    });
+    //function sub() {
+    //    debugger;
+    //    var ss = document.getElementById("btn").value;
+    //    document.getElementById("dis").innerHTML = ss;
+    //}
+</script>
