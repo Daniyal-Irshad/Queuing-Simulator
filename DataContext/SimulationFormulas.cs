@@ -8,7 +8,7 @@ namespace OR_Project.DataContext
 {
     public class SimulationFormulas
     {
-        struct myObj
+        public struct myObj
         {
             public int interArrival;
             public int serviceTime;
@@ -18,6 +18,14 @@ namespace OR_Project.DataContext
             public int waitTime;
             public int turnaroundTime;
             public int server;
+            //public int interArrival { get; set; }
+            //public int serviceTime { get; set; }
+            //public int arrival { get; set; }
+            //public int startTime { get; set; }
+            //public int endTime { get; set; }
+            //public int waitTime { get; set; }
+            //public int turnaroundTime { get; set; }
+            //public int server { get; set; }
         }
         public static int GenerateRandomExponential(float u)
         {
@@ -52,6 +60,7 @@ namespace OR_Project.DataContext
                 obj.server = serverNum+1;
                 servers[serverNum] += serviceTimes[j];
                 customers[j] = obj;
+                
             }
             return customers;
         }

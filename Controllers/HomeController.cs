@@ -17,7 +17,7 @@ namespace OR_Project.Controllers
         [HttpPost]
         public ActionResult Details(PerformanceMeasure collection)
         {
-
+            if (ModelState.IsValid) { 
                 if (collection.IATDis == "M" && collection.STDis == "M")
                 {
                     if (collection.NoOfServers == 1)
@@ -56,7 +56,7 @@ namespace OR_Project.Controllers
                         return View();
                     }
                 }
-                else
+                else if (collection.IATDis == "G" && collection.STDis == "G")
                 {
                     if (collection.NoOfServers == 1)
                     {
@@ -75,9 +75,10 @@ namespace OR_Project.Controllers
                         return View();
                     }
                 }
-            
 
-            return View();
+            }
+            TempData["Failure"] = "* Fill all the fields";
+            return RedirectToAction("Index");
         }
 
     }

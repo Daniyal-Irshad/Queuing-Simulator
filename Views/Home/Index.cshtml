@@ -3,74 +3,76 @@
 }
 <h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
 <h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>
-<hr />
+@*<hr />*@
 <div class="row">
     @using (Html.BeginForm("Details", "Home", FormMethod.Post))
     {
-        @Html.AntiForgeryToken()
-
-        <div class="form-horizontal">
-            <div style="display: flex; justify-content: center; align-items: center; flex-flow: column;">
-                <h3><label><b>Select No Of Servers</b></label></h3>
-                <select name="NoOfServers" class="form-select" aria-label="Default select example" style="width: 132px; font-size: 1.5rem;">
-                    <option selected>Select Servers</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
-            </div>
-            <br />
-            <div class="col-md-6">
-                <div class="jumbotron" style="border: 1px solid gray;">
-                    <p class="lead"><b>Select Inter-Arrival Distribution:</b></p>
-                    <select name="IATDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="margin-left: 10px; font-size: 1.5rem;">
-                        <option selected>Select Distribution</option>
-                        <option value="M">Exponential</option>
-                        <option value="G">Gamma</option>
-                        <option value="G">Uniform</option>
-                        <option value="G">Normal</option>
-                    </select>
-                    <br />
-
-                    <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
-                    <input name="MIAT" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
-                    <br />
-                    <br />
-
-                    <p class="lead"><b>Enter Variance of Inter Arrival:</b></p>
-                    <input name="Variance_IA" disabled="disabled" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2a)" />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="jumbotron" style="border: 1px solid gray;">
-                    <p class="lead"><b>Select Service-Time Distribution:</b></p>
-                    <select name="STDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="margin-left: 10px; font-size: 1.5rem;">
-                        <option selected>Select Distribution</option>
-                        <option value="M">Exponential</option>
-                        <option value="G">Gamma</option>
-                        <option value="G">Uniform</option>
-                        <option value="G">Normal</option>
-                    </select>
-                    <br />
-
-                    <p class="lead"><b>Enter Service Time:</b></p>
-                    <input name="MST" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
-                    <br />
-                    <br />
-
-                    <p class="lead"><b>Enter Variance of Service Time:</b></p>
-                    <input name="Variance_S" disabled="disabled" style="margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2s)" />
-                </div>
-            </div>
-            <input name="BtnName" type="text" id="dis" style="display:none;" />
-            <div class="text-center">
-                <input style="background-color:darkslategrey; color: white;" type="submit" id="btn" onclick="sub();" value="Calculate Performance Measure" class="btn btn-default" />
-            </div>
-            @*<div class="text-center">
-                    <input style="background-color:darkslategrey; color: white;" type="submit" id="btn1" onclick="sub();" value="Simulate Random Numbers" class="btn btn-default" />
-                </div>*@
+        @Html.AntiForgeryToken()<div class="form-horizontal" style="color: black">
+        @if (TempData["Failure"] != null)
+                {
+                    <div style="color: darkred; font-size: 2rem;">@TempData["Failure"]</div>
+                }
+        <div style="color: white; display: flex; justify-content: center; align-items: center; flex-flow: column;">
+            <h3><label><b>Select No Of Servers</b></label></h3>
+            <select name="NoOfServers" class="form-select" aria-label="Default select example" style="background-color: darkslategray; color: white; width: 132px; font-size: 1.5rem;">
+                <option selected>Select Servers</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
         </div>
+        <br />
+        <div class="col-md-6">
+            <div class="jumbotron" style="border: 1px solid gray;">
+                <p class="lead"><b>Select Inter-Arrival Distribution:</b></p>
+                <select id="IATDis" name="IATDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
+                    <option selected>Select Distribution</option>
+                    <option value="M">Exponential</option>
+                    <option value="G">Gamma</option>
+                    <option value="G">Uniform</option>
+                    <option value="G">Normal</option>
+                </select>
+                <br />
+
+                <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
+                <input name="MIAT" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
+                <br />
+                <br />
+
+                <p class="lead"><b>Enter Variance of Inter Arrival:</b></p>
+                <input name="Variance_IA" disabled="disabled" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2a)" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron" style="border: 1px solid gray;">
+                <p class="lead"><b>Select Service-Time Distribution:</b></p>
+                <select id="STDis" name="STDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
+                    <option selected>Select Distribution</option>
+                    <option value="M">Exponential</option>
+                    <option value="G">Gamma</option>
+                    <option value="G">Uniform</option>
+                    <option value="G">Normal</option>
+                </select>
+                <br />
+
+                <p class="lead"><b>Enter Service Time:</b></p>
+                <input name="MST" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
+                <br />
+                <br />
+
+                <p class="lead"><b>Enter Variance of Service Time:</b></p>
+                <input name="Variance_S" disabled="disabled" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2s)" />
+            </div>
+        </div>
+        <input name="BtnName" type="text" id="dis" style="display:none;" />
+        <div class="text-center">
+            <input style="background-color:darkslategrey; color: white;" type="submit" id="btn" onclick="sub();" value="Calculate Performance Measure" class="btn btn-default" />
+        </div>
+        @*<div class="text-center">
+            <input style="background-color:darkslategrey; color: white;" type="submit" id="btn1" onclick="sub();" value="Simulate Random Numbers" class="btn btn-default" />
+        </div>*@
+    </div>
     }
     @*<br />
         <br />
@@ -94,19 +96,33 @@
     });
 
     $('select[name="IATDis"]').change(function () {
-        debugger;
         iad = $("select[name='IATDis'] option:selected").val();
         if (iad == "G") {
             $("select[name='STDis'] option[value='M']").remove();
             $("input[name='Variance_IA']").prop("disabled", false)
         }
+        else {
+            var check = 0;
+            //$("select[name='STDis']").append($('<option>, { value: M, text: Exponential }');
+            for (i = 0; i < document.getElementById("STDis").length; ++i) {
+                if (document.getElementById("STDis").options[i].value == "M") {
+                    check=1;
+                }
+            }
+            if (check == 0) {
+                $('#STDis').append('<option value="M">Exponential</option>');
+            }
+            $("input[name='Variance_IA']").prop("disabled", true);
+        }
     });
 
     $('select[name="STDis"]').change(function () {
-        debugger;
         sd = $("select[name='STDis'] option:selected").val();
         if (sd == "G") {
             $("input[name='Variance_S']").prop("disabled", false)
+        }
+        else {
+            $("input[name='Variance_S']").prop("disabled", true)
         }
     });
     //function sub() {
@@ -114,4 +130,24 @@
     //    var ss = document.getElementById("btn").value;
     //    document.getElementById("dis").innerHTML = ss;
     //}
+
+    //$(document).keyup(function (event) {
+    //        debugger;
+    //        var empty = false;
+    //        $('form > input').each(function () {
+    //            debugger;
+    //            if (!empty) { // this will only check next inputs if empty is false, but once its set to true no further check will be made
+    //                if ($(this).val() == '') {
+    //                    empty = true;
+    //                }
+    //            }
+    //        });
+    //        if (empty) {
+    //            debugger;
+    //            $('#btn').attr('disabled', 'disabled');
+    //        } else {
+    //            debugger;
+    //            $('#btn').removeAttr('disabled');
+    //        }
+    //    });
 </script>
