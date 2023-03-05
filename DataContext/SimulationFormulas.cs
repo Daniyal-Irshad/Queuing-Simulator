@@ -26,7 +26,6 @@ namespace OR_Project.DataContext
         {
             Random random = new Random();
             return (int)((u*-1) * Math.Log(random.NextDouble()));
-            //return (int)(u * Math.Log(random.Next(10)));
         }
         public static double CommulativeFrequency(float lamda, int x)
         {
@@ -34,27 +33,27 @@ namespace OR_Project.DataContext
             double ans = (double)((Math.Pow(e, (lamda * -1)) * (Math.Pow(lamda, x))) / GGC_Formulas.factorial(x));
             return ans;
         }
-        //public static int[] InterArrivalCol(double[] arr)
-        //{
-        //    int[] interArrivalArr = new int[arr.Length];
-        //    for(int i=0;i<arr.Length; i++)
-        //    {
-        //        if (i == 0)
-        //        {
-        //            interArrivalArr[i] = 0;
-        //        }
-        //        else
-        //        {
-        //            Random rand = new Random();
-        //            var b = rand.NextDouble();
-        //            //interArrivalArr[i] = arr.FindIndex();
-        //            var a = arr.ToList().FindIndex(x => b - x > 0);
-        //            interArrivalArr[i] = a;
+        public static int[] InterArrivalCol(double[] arr)
+        {
+            int[] interArrivalArr = new int[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (i == 0)
+                {
+                    interArrivalArr[i] = 0;
+                }
+                else
+                {
+                    Random rand = new Random();
+                    var b = rand.NextDouble();
+                    //interArrivalArr[i] = arr.FindIndex();
+                    var a = arr.ToList().FindIndex(x => b - x > 0);
+                    interArrivalArr[i] = a;
 
-        //        }
-        //    }
-        //    return interArrivalArr;
-        //}
+                }
+            }
+            return interArrivalArr;
+        }
         public static int[] CommulativeFrequencyGenerate(float lamda)
         {
             List<double> comArr = new List<double>();
@@ -79,7 +78,6 @@ namespace OR_Project.DataContext
             var myArr = comArr.ToArray();
             int[] interArrivalArr = new int[myArr.Length];
             Random rand = new Random();
-            //var rngNum = RandomNumberGenerator.GetInt32(lowerBound, upperBound);
             for(int j = 0; j < myArr.Length; j++)
             {
                 interArrivalArr[j] = rand.Next(1, myArr.Length - 1);

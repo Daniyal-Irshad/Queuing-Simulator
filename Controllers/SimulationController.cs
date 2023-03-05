@@ -49,16 +49,9 @@ namespace OR_Project.Controllers
                     {
                         serviceValue = SimulationFormulas.GenerateRandomExponential(MeanServiceTime);
                     }
-                    //while (interArrivalValue < 0)
-                    //{
-                    //    interArrivalValue = SimulationFormulas.GenerateRandomExponential(MeanInterArrival);
-                    //}
                     serviceTimes[i] = serviceValue;
-                    //interArrivals[i] = interArrivalValue;
                 }
-                //interArrivals[0] = 0;
                 dynamic[] SimulationData = SimulationFormulas.GenerateSimulation(interArrivals, serviceTimes, collection.NoOfServers);
-                //public static dynamic[] TheData = SimulationData;
 
                 float[] data = MMC_Formulas.MMC(collection.MIAT, collection.MST, collection.NoOfServers);
                 TempData["HeadEX"] = "MM" + collection.NoOfServers;
