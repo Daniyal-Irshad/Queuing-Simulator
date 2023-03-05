@@ -2,7 +2,7 @@
     ViewBag.Title = "Home Page";
 }
 <h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
-<h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>
+<h4 class="text-center"><b>Presented To Dr.Shaista Raees</b></h4>
 @*<hr />*@
 <div class="row">
     @using (Html.BeginForm("Details", "Home", FormMethod.Post))
@@ -34,14 +34,20 @@
                     <option value="G">Normal</option>
                 </select>
                 <br />
-
-                <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
-                <input name="MIAT" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
-                <br />
-                <br />
-
-                <p class="lead"><b>Enter Variance of Inter Arrival:</b></p>
-                <input name="Variance_IA" disabled="disabled" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2a)" />
+                <div id="inp_iat">
+                    <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
+                    <input name="MIAT" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
+                    <br />
+                    <br />
+                </div>
+                <div id="inp_var_iat" hidden>
+                    <p class="lead"><b>Minimum Value of Inter-Arrival Time:</b></p>
+                    <input name="Min_I" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Minimum Value" />
+                    <br />
+                    <br />
+                    <p class="lead"><b>Maximum Value of Inter-Arrival Time:</b></p>
+                    <input name="Max_I" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Maximum Value" />
+                </div>
             </div>
         </div>
         <div class="col-md-6">
@@ -55,14 +61,20 @@
                     <option value="G">Normal</option>
                 </select>
                 <br />
-
-                <p class="lead"><b>Enter Service Time:</b></p>
-                <input name="MST" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
-                <br />
-                <br />
-
-                <p class="lead"><b>Enter Variance of Service Time:</b></p>
-                <input name="Variance_S" disabled="disabled" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Variance (σ2s)" />
+                <div id="inp_st">
+                    <p class="lead"><b>Enter Service Time:</b></p>
+                    <input name="MST" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
+                    <br />
+                    <br />
+                </div>
+                <div id="inp_var_st" hidden>
+                    <p class="lead"><b>Minimum Value of Service Time:</b></p>
+                    <input name="Min_S" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Minimum Value" />
+                    <br />
+                    <br />
+                    <p class="lead"><b>Maximum Value of Service Time:</b></p>
+                    <input name="Max_S" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Maximum Value" />
+                </div>
             </div>
         </div>
         <input name="BtnName" type="text" id="dis" style="display:none;" />
@@ -99,7 +111,12 @@
         iad = $("select[name='IATDis'] option:selected").val();
         if (iad == "G") {
             $("select[name='STDis'] option[value='M']").remove();
-            $("input[name='Variance_IA']").prop("disabled", false)
+            //$("input[name='Min_I']").prop("disabled", false)
+            //$("input[name='Max_I']").prop("disabled", false)
+            $("#inp_iat").hide();
+            $("#inp_var_iat").removeAttr("hidden");
+            $("#inp_st").hide();
+            $("#inp_var_st").removeAttr("hidden");
         }
         else {
             var check = 0;
@@ -112,17 +129,30 @@
             if (check == 0) {
                 $('#STDis').append('<option value="M">Exponential</option>');
             }
-            $("input[name='Variance_IA']").prop("disabled", true);
+            //$("input[name='Min_I']").prop("disabled", true);
+            //$("input[name='Max_I']").prop("disabled", true);
+            $("#inp_iat").show();
+            $("#inp_var_iat").attr("hidden",true);
+
         }
     });
 
     $('select[name="STDis"]').change(function () {
         sd = $("select[name='STDis'] option:selected").val();
         if (sd == "G") {
-            $("input[name='Variance_S']").prop("disabled", false)
+            //$("input[name='Min_S']").prop("disabled", false)
+            //$("input[name='Max_S']").prop("disabled", false)
+            $("#inp_st").hide();
+            $("#inp_var_st").removeAttr("hidden");
+
         }
         else {
-            $("input[name='Variance_S']").prop("disabled", true)
+            //$("input[name='Min_S']").prop("disabled", true)
+            //$("input[name='Max_S']").prop("disabled", true)
+
+            $("#inp_st").show();
+            $("#inp_var_st").attr("hidden", true);
+
         }
     });
     //function sub() {

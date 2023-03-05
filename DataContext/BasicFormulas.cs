@@ -28,6 +28,11 @@ namespace OR_Project.DataContext
             float Idle = 1 - rho;
             return Idle;
         }
+        public static float Calc_Variance(float min, float max)
+        {
+            float variance = (float)Math.Pow((max - min), 2) / 12;
+            return variance;
+        }
 
     }
 }

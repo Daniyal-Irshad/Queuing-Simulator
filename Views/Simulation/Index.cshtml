@@ -14,6 +14,7 @@
     <div id="myForm" style="position: relative; right: 100px">
         <div class="col-md-4">
             <div class="jumbotron" style="color: black; border: 1px solid gray;">
+                <div id="inputField" hidden></div>
                 <p class="lead"><b>Select No.Of Servers</b></p>
                 <select id="servers" name="NoOfServers" class="form-select" aria-label="Default select example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
                     <option selected>Select Servers</option>
@@ -22,10 +23,10 @@
                     <option value="3">3</option>
                     <option value="4">4</option>
                 </select>
-                <br />
+                @*<br />
                 <br />
                 <p class="lead"><b>Enter Customers:</b></p>
-                <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />
+                <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />*@
                 <br />
                 <br />
                 <p class="lead"><b>Enter Inter-Arrival:</b></p>
@@ -39,7 +40,7 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="jumbotron" style="height:48.5rem; width: 100rem; overflow:scroll; border: 1px solid gray;">
+            <div class="jumbotron" style="height:40rem; width: 100rem; overflow:scroll; border: 1px solid gray;">
                 <table class="table" style="color: black;">
                     <thead>
                         <tr>
@@ -106,7 +107,7 @@
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>*@
 <script>
     function uploadFile() {
-        
+
         var files = document.getElementById('fileupload').files;
         try {
             var reader = new FileReader();
@@ -124,20 +125,20 @@
                 jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
                 var interArrivalTime=0;
                 var serviceTime = 0;
-                var noOfCustomers = jsonData.length;
-                for (var i = 0; i < noOfCustomers; i++)
+                /* var noOfCustomers = jsonData.length;*/
+                for (var i = 0; i < jsonData.length; i++)
                 {
                     var row = jsonData[i];
                     interArrivalTime = interArrivalTime + parseInt(row["InterArrival"]);
                     serviceTime = serviceTime + parseInt(row["Service Time"]);
                 }
-                var lamda = interArrivalTime / noOfCustomers;
-                var miyon = serviceTime / noOfCustomers;
+                var lamda = interArrivalTime / jsonData.length;
+                var miyon = serviceTime / jsonData.length;
                 console.log(lamda);
                 console.log(miyon);
                 servers = 2;
                 document.getElementById('servers').value = servers;
-                document.getElementById('customers').value = noOfCustomers;
+/*                document.getElementById('customers').value = noOfCustomers;*/
                 document.getElementById('iat').value = lamda;
                 document.getElementById('st').value = miyon;
                 //displaying the json result into HTML table
@@ -159,6 +160,7 @@
 
     function sub() {
         debugger;
+        $("#inputField").empty();
         $("#tableRowData").empty();
         $("#myPM").empty();
         $("#noData").hide();
@@ -167,12 +169,12 @@
         $("#pm").hide();
         var inputData = {
             NoOfServers: $("#servers option:selected").val(),
-            NoOfCustomers: $("#customers").val(),
             MIAT: $("#iat").val(),
             MST: $("#st").val()
 
         }
-        $.ajax(
+        if (inputData.NoOfServers != "Select Servers" && inputData.MIAT != "" && inputData.MST != "") {
+            $.ajax(
             {
                 type: "POST",
                 url: '@Url.Action("Index", "Simulation")',
@@ -193,5 +195,13 @@
                     $("#myPM").append('<h2><b><u>Performance Measure of MM2 </u></b></h2><br /><p class="lead"><b>Average Length of the Queue (Lq) :&nbsp; ' + dataa2[0] + '</b></p><p class="lead"><b>Average Wait Time of the Queue (Wq) :&nbsp; ' + dataa2[1] + '</b></p><p class="lead"><b>Average Wait Time in the System (W) :&nbsp; ' + dataa2[2] + '</b></p><p class="lead"><b>Average Length of the System (L) :&nbsp; ' + dataa2[3] + '</b></p><p class="lead"><b>Idle Time (idle) :&nbsp; ' + dataa2[4] + '</b></p>')
                 }
             });
+        }
+        else {
+            $("#inputField").removeAttr('hidden');
+            $("#myLoader").hide();
+            $("#noData").show();
+            $("#inputField").append('<div style="color: darkred; font-size: 2rem;">*Fill all the Fields !</div>')
+        }
+
     }
 </script>

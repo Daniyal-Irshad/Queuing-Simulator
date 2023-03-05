@@ -35,40 +35,41 @@ namespace OR_Project.Controllers
         [HttpPost]
         public ActionResult Index(QueueSimulation collection)
         {
-            float MeanInterArrival = collection.MIAT;
-            float MeanServiceTime = collection.MST;
-            int NoOfCustomers = collection.NoOfCustomers;
-            int[] interArrivals = new int[NoOfCustomers];
-            int[] serviceTimes = new int[NoOfCustomers];
-            for (var i = 0; i < NoOfCustomers; i++)
-            {
-                Thread.Sleep(200);
-                int interArrivalValue = SimulationFormulas.GenerateRandomExponential(MeanInterArrival);
-                int serviceValue = SimulationFormulas.GenerateRandomExponential(MeanServiceTime);
-                while (serviceValue == 0)
+                float MeanInterArrival = collection.MIAT;
+                float MeanServiceTime = collection.MST;
+
+                var interArrivals = SimulationFormulas.CommulativeFrequencyGenerate(MeanInterArrival);
+                int[] serviceTimes = new int[interArrivals.Length];
+
+                for (var i = 0; i < interArrivals.Length; i++)
                 {
-                    serviceValue = SimulationFormulas.GenerateRandomExponential(MeanServiceTime);
+                    Thread.Sleep(200);
+                    int serviceValue = SimulationFormulas.GenerateRandomExponential(MeanServiceTime);
+                    while (serviceValue == 0)
+                    {
+                        serviceValue = SimulationFormulas.GenerateRandomExponential(MeanServiceTime);
+                    }
+                    //while (interArrivalValue < 0)
+                    //{
+                    //    interArrivalValue = SimulationFormulas.GenerateRandomExponential(MeanInterArrival);
+                    //}
+                    serviceTimes[i] = serviceValue;
+                    //interArrivals[i] = interArrivalValue;
                 }
-                while (interArrivalValue < 0)
-                {
-                    interArrivalValue = SimulationFormulas.GenerateRandomExponential(MeanInterArrival);
-                }
-                serviceTimes[i] = serviceValue;
-                interArrivals[i] = interArrivalValue;
+                //interArrivals[0] = 0;
+                dynamic[] SimulationData = SimulationFormulas.GenerateSimulation(interArrivals, serviceTimes, collection.NoOfServers);
+                //public static dynamic[] TheData = SimulationData;
+
+                float[] data = MMC_Formulas.MMC(collection.MIAT, collection.MST, collection.NoOfServers);
+                TempData["HeadEX"] = "MM" + collection.NoOfServers;
+                TempData["DataaEX"] = SimulationData;
+                dynamic[] myDataa = new dynamic[2];
+                myDataa[0] = SimulationData;
+                myDataa[1] = data;
+
+                return Json(myDataa,JsonRequestBehavior.AllowGet);
             }
-            interArrivals[0] = 0;
-            dynamic[] SimulationData = SimulationFormulas.GenerateSimulation(interArrivals, serviceTimes, collection.NoOfServers);
-            //public static dynamic[] TheData = SimulationData;
-
-            float[] data = MMC_Formulas.MMC(collection.MIAT, collection.MST, collection.NoOfServers);
-            TempData["HeadEX"] = "MM" + collection.NoOfServers;
-            TempData["DataaEX"] = SimulationData;
-            dynamic[] myDataa = new dynamic[2];
-            myDataa[0] = SimulationData;
-            myDataa[1] = data;
-
-            return Json(myDataa,JsonRequestBehavior.AllowGet);
-        }
+        
 
 
 

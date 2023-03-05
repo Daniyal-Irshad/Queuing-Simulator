@@ -7,10 +7,11 @@ namespace OR_Project.DataContext
 {
     public class MG1_Formulas
     {
-        public static float[] MG1(float lamda, float meu,float variance_s, int c)
+        public static float[] MG1(float lamda, float min_s,float max_s, int c)
         {
             lamda = 1 / lamda;
-            meu = 1 / meu;
+            float meu = 1 / ((min_s+max_s)/2);
+            float variance_s = BasicFormulas.Calc_Variance(min_s, max_s);
             float p = lamda / (meu * c);
             float lq_mg1 = LQ_MG1(p,lamda,variance_s);
             float wq_mg1 = BasicFormulas.Calc_WQ(lq_mg1, lamda);

@@ -19,11 +19,13 @@ namespace OR_Project.DataContext
         [Required]
         public float MST { get; set; }
         [Required]
-        public float Variance_S { get; set; }
+        public float Min_S { get; set; }
         [Required]
-        public float Variance_IA { get; set; }
-
-
+        public float Min_I { get; set; }
+        [Required]
+        public float Max_S { get; set; }
+        [Required]
+        public float Max_I { get; set; }
         public string BtnName { get; set; }
     }
 }
