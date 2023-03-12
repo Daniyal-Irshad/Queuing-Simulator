@@ -24,9 +24,9 @@
                     <option value="4">4</option>
                 </select>
                 @*<br />
-                <br />
-                <p class="lead"><b>Enter Customers:</b></p>
-                <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />*@
+                    <br />
+                    <p class="lead"><b>Enter Customers:</b></p>
+                    <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />*@
                 <br />
                 <br />
                 <p class="lead"><b>Enter Inter-Arrival:</b></p>
@@ -101,62 +101,62 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.min.js"></script>*@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>*@
 <script>
-    function uploadFile() {
+        function uploadFile() {
 
-        var files = document.getElementById('fileupload').files;
-        try {
-            var reader = new FileReader();
-            reader.readAsBinaryString(files[0]);
-            var jsonData;
-            reader.onload = function (e) {
-                debugger;
-                var data = e.target.result;
-                var workbook = XLSX.read(data, {
-                    type: 'binary'
-                });
-                var result = {};
-                var firstSheetName = workbook.SheetNames[0];
-                //reading only first sheet data
-                jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
-                var interArrivalTime=0;
-                var serviceTime = 0;
-                /* var noOfCustomers = jsonData.length;*/
-                for (var i = 0; i < jsonData.length; i++)
-                {
-                    var row = jsonData[i];
-                    interArrivalTime = interArrivalTime + parseInt(row["InterArrival"]);
-                    serviceTime = serviceTime + parseInt(row["Service Time"]);
+            var files = document.getElementById('fileupload').files;
+            try {
+                var reader = new FileReader();
+                reader.readAsBinaryString(files[0]);
+                var jsonData;
+                reader.onload = function (e) {
+                    debugger;
+                    var data = e.target.result;
+                    var workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                    var result = {};
+                    var firstSheetName = workbook.SheetNames[0];
+                    //reading only first sheet data
+                    jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
+                    var interArrivalTime=0;
+                    var serviceTime = 0;
+                    /* var noOfCustomers = jsonData.length;*/
+                    for (var i = 0; i < jsonData.length; i++)
+                    {
+                        var row = jsonData[i];
+                        interArrivalTime = interArrivalTime + parseInt(row["InterArrival"]);
+                        serviceTime = serviceTime + parseInt(row["Service Time"]);
+                    }
+                    var lamda = interArrivalTime / jsonData.length;
+                    var miyon = serviceTime / jsonData.length;
+                    console.log(lamda);
+                    console.log(miyon);
+                    servers = 2;
+                    document.getElementById('servers').value = servers;
+    /*                document.getElementById('customers').value = noOfCustomers;*/
+                    document.getElementById('iat').value = lamda;
+                    document.getElementById('st').value = miyon;
+                    //displaying the json result into HTML table
+                    //displayJsonToHtmlTable(jsonData);
                 }
-                var lamda = interArrivalTime / jsonData.length;
-                var miyon = serviceTime / jsonData.length;
-                console.log(lamda);
-                console.log(miyon);
-                servers = 2;
-                document.getElementById('servers').value = servers;
-/*                document.getElementById('customers').value = noOfCustomers;*/
-                document.getElementById('iat').value = lamda;
-                document.getElementById('st').value = miyon;
-                //displaying the json result into HTML table
-                //displayJsonToHtmlTable(jsonData);
+            } catch (e) {
+                console.error(e);
             }
-        } catch (e) {
-            console.error(e);
+            //let formData = new FormData();
+            //debugger;
+            //formData.append("file", fileupload.files[0]);
+            //await fetch('/upload.php', {
+            //    method: "POST",
+            //    body: formData
+            //});
+            console.log(jsonData);
+            //alert('The file has been uploaded successfully.');
         }
-        //let formData = new FormData();
-        //debugger;
-        //formData.append("file", fileupload.files[0]);
-        //await fetch('/upload.php', {
-        //    method: "POST",
-        //    body: formData
-        //});
-        console.log(jsonData);
-        //alert('The file has been uploaded successfully.');
-    }
 
     function sub() {
         debugger;

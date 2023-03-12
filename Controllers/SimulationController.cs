@@ -39,6 +39,7 @@ namespace OR_Project.Controllers
                 float MeanServiceTime = collection.MST;
 
                 var interArrivals = SimulationFormulas.CommulativeFrequencyGenerate(MeanInterArrival);
+                //var serviceTime = SimulationFormulas.CommulativeFrequencyGenerate(MeanServiceTime);
                 int[] serviceTimes = new int[interArrivals.Length];
 
                 for (var i = 0; i < interArrivals.Length; i++)

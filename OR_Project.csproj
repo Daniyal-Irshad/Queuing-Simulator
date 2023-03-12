@@ -121,9 +121,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ChiSquareController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SimulationController.cs" />
     <Compile Include="DataContext\BasicFormulas.cs" />
+    <Compile Include="DataContext\ChiSquareFormulas.cs" />
+    <Compile Include="DataContext\ChiSquareModel.cs" />
     <Compile Include="DataContext\DataPoint.cs" />
     <Compile Include="DataContext\GG1_Formulas.cs" />
     <Compile Include="DataContext\GGC_Formulas.cs" />
@@ -181,6 +184,7 @@
     <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\Simulation\Index.cshtml" />
     <Content Include="Views\Simulation\JSON.cshtml" />
+    <Content Include="Views\ChiSquare\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

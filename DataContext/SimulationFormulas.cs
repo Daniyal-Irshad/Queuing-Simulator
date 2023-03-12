@@ -69,7 +69,7 @@ namespace OR_Project.DataContext
                 {
                     comArr.Add(CommulativeFrequency(lamda, i) + (double)comArr[i - 1]);
                 }
-                if ((double)comArr[i] >= 1)
+                if ((double)comArr[i] >= 0.999)
                 {
                     check = false;
                 }
