@@ -1,0 +1,183 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
+<h4 class="text-center"><b>Presented To Dr.Shaista Raees</b></h4>
+@*<hr />*@
+<div class="row">
+    @using (Html.BeginForm("Details", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()<div class="form-horizontal" style="color: black">
+        @if (TempData["Failure"] != null)
+                {
+                    <div style="color: darkred; font-size: 2rem;">@TempData["Failure"]</div>
+                }
+        <div style="color: white; display: flex; justify-content: center; align-items: center; flex-flow: column;">
+            <h3><label><b>Select No Of Servers</b></label></h3>
+            <select name="NoOfServers" class="form-select" aria-label="Default select example" style="background-color: darkslategray; color: white; width: 132px; font-size: 1.5rem;">
+                <option selected>Select Servers</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <br />
+        <div class="col-md-6">
+            <div class="jumbotron" style="border: 1px solid gray;">
+                <p class="lead"><b>Select Inter-Arrival Distribution:</b></p>
+                <select id="IATDis" name="IATDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
+                    <option selected>Select Distribution</option>
+                    <option value="M">Exponential</option>
+                    <option value="G">Gamma</option>
+                    <option value="G">Uniform</option>
+                    <option value="G">Normal</option>
+                </select>
+                <br />
+                <div id="inp_iat">
+                    <p class="lead"><b>Enter Inter-Arrival Time:</b></p>
+                    <input name="MIAT" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Inter-Arrival Time (λ)" />
+                    <br />
+                    <br />
+                </div>
+                <div id="inp_var_iat" hidden>
+                    <p class="lead"><b>Minimum Value of Inter-Arrival Time:</b></p>
+                    <input name="Min_I" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Minimum Value" />
+                    <br />
+                    <br />
+                    <p class="lead"><b>Maximum Value of Inter-Arrival Time:</b></p>
+                    <input name="Max_I" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Maximum Value" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="jumbotron" style="border: 1px solid gray;">
+                <p class="lead"><b>Select Service-Time Distribution:</b></p>
+                <select id="STDis" name="STDis" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
+                    <option selected>Select Distribution</option>
+                    <option value="M">Exponential</option>
+                    <option value="G">Gamma</option>
+                    <option value="G">Uniform</option>
+                    <option value="G">Normal</option>
+                </select>
+                <br />
+                <div id="inp_st">
+                    <p class="lead"><b>Enter Service Time:</b></p>
+                    <input name="MST" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
+                    <br />
+                    <br />
+                </div>
+                <div id="inp_var_st" hidden>
+                    <p class="lead"><b>Minimum Value of Service Time:</b></p>
+                    <input name="Min_S" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Minimum Value" />
+                    <br />
+                    <br />
+                    <p class="lead"><b>Maximum Value of Service Time:</b></p>
+                    <input name="Max_S" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Maximum Value" />
+                </div>
+            </div>
+        </div>
+        <input name="BtnName" type="text" id="dis" style="display:none;" />
+        <div class="text-center">
+            <input style="background-color:darkslategrey; color: white;" type="submit" id="btn" onclick="sub();" value="Calculate Performance Measure" class="btn btn-default" />
+        </div>
+        @*<div class="text-center">
+            <input style="background-color:darkslategrey; color: white;" type="submit" id="btn1" onclick="sub();" value="Simulate Random Numbers" class="btn btn-default" />
+        </div>*@
+    </div>
+    }
+    @*<br />
+        <br />
+        <div id="pm" class="jumbotron text-center" style="display:none">
+            <h2><b><u>Performance Measure</u></b></h2>
+            <br />
+            <p class="lead"><b>Service-Time : ViewBag.Data[0]</b></p>
+            <p class="lead"><b>InterArrival-Time : 32</b></p>
+            <p class="lead"><b>Arrival-Time : 45</b></p>
+            <p class="lead"><b>Queue-Length : 4</b></p>
+
+        </div>*@
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    $("form").submit(function () {
+        debugger;
+        //var ss = document.getElementById("btn").value;
+        //$("#dis").val(ss);
+    });
+
+    $('select[name="IATDis"]').change(function () {
+        iad = $("select[name='IATDis'] option:selected").val();
+        if (iad == "G") {
+            $("select[name='STDis'] option[value='M']").remove();
+            //$("input[name='Min_I']").prop("disabled", false)
+            //$("input[name='Max_I']").prop("disabled", false)
+            $("#inp_iat").hide();
+            $("#inp_var_iat").removeAttr("hidden");
+            $("#inp_st").hide();
+            $("#inp_var_st").removeAttr("hidden");
+        }
+        else {
+            var check = 0;
+            //$("select[name='STDis']").append($('<option>, { value: M, text: Exponential }');
+            for (i = 0; i < document.getElementById("STDis").length; ++i) {
+                if (document.getElementById("STDis").options[i].value == "M") {
+                    check=1;
+                }
+            }
+            if (check == 0) {
+                $('#STDis').append('<option value="M">Exponential</option>');
+            }
+            //$("input[name='Min_I']").prop("disabled", true);
+            //$("input[name='Max_I']").prop("disabled", true);
+            $("#inp_iat").show();
+            $("#inp_var_iat").attr("hidden",true);
+
+        }
+    });
+
+    $('select[name="STDis"]').change(function () {
+        sd = $("select[name='STDis'] option:selected").val();
+        if (sd == "G") {
+            //$("input[name='Min_S']").prop("disabled", false)
+            //$("input[name='Max_S']").prop("disabled", false)
+            $("#inp_st").hide();
+            $("#inp_var_st").removeAttr("hidden");
+
+        }
+        else {
+            //$("input[name='Min_S']").prop("disabled", true)
+            //$("input[name='Max_S']").prop("disabled", true)
+
+            $("#inp_st").show();
+            $("#inp_var_st").attr("hidden", true);
+
+        }
+    });
+    //function sub() {
+    //    debugger;
+    //    var ss = document.getElementById("btn").value;
+    //    document.getElementById("dis").innerHTML = ss;
+    //}
+
+    //$(document).keyup(function (event) {
+    //        debugger;
+    //        var empty = false;
+    //        $('form > input').each(function () {
+    //            debugger;
+    //            if (!empty) { // this will only check next inputs if empty is false, but once its set to true no further check will be made
+    //                if ($(this).val() == '') {
+    //                    empty = true;
+    //                }
+    //            }
+    //        });
+    //        if (empty) {
+    //            debugger;
+    //            $('#btn').attr('disabled', 'disabled');
+    //        } else {
+    //            debugger;
+    //            $('#btn').removeAttr('disabled');
+    //        }
+    //    });
+</script>

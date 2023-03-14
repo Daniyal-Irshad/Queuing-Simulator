@@ -4,7 +4,7 @@
     var myHead = TempData["Head"];
     var myData = TempData["Dataa"];
 }
-<h1 class="text-center"><b><u>Queuing Simulation</u></b></h1>
+<h1 class="text-center"><b><u>M/M/C Queuing Simulation</u></b></h1>
 @*<h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>*@
 <hr />
 @*<h2 class="text-center">Queue Simulation</h2>*@
@@ -15,6 +15,7 @@
         <div class="col-md-4">
             <div class="jumbotron" style="color: black; border: 1px solid gray;">
                 <div id="inputField" hidden></div>
+                @*<p class="lead text-center" style="color: darkslategray;"><b>M/M/C Distribution</b></p>*@
                 <p class="lead"><b>Select No.Of Servers</b></p>
                 <select id="servers" name="NoOfServers" class="form-select" aria-label="Default select example" style="background-color: white; margin-left: 10px; font-size: 1.5rem;">
                     <option selected>Select Servers</option>
@@ -24,9 +25,9 @@
                     <option value="4">4</option>
                 </select>
                 @*<br />
-                    <br />
-                    <p class="lead"><b>Enter Customers:</b></p>
-                    <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />*@
+        <br />
+        <p class="lead"><b>Enter Customers:</b></p>
+        <input id="customers" name="NoOfCustomers" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="No of Customers" />*@
                 <br />
                 <br />
                 <p class="lead"><b>Enter Inter-Arrival:</b></p>
@@ -37,10 +38,13 @@
                 <input id="st" name="MST" style="background-color: white; margin-left: 10px; font-size: 1.5rem;" placeholder="Mean Service Time (µ)" />
                 <br />
                 <br />
+
             </div>
         </div>
         <div class="col-md-8">
             <div class="jumbotron" style="height:40rem; width: 100rem; overflow:scroll; border: 1px solid gray;">
+                @*<p class="text-center" style="color: darkslategray;"><b>M/M/C Simulation</b></p>*@
+                
                 <table class="table" style="color: black;">
                     <thead>
                         <tr>
@@ -81,20 +85,37 @@
 <div class="text-center">
 </div>
 <br />
-<div id="pm" hidden class="row" style="position: relative; right: 100px">
-    <div class="col-md-8">
+<div id="pm" hidden class="row">
+    <div class="col-md-7">
         <div id="myPM" class="jumbotron text-center" style="color: black;">
 
         </div>
     </div>
-    <div class="col-md-4" style="display: flex; justify-content: center; align-items: center;">
-        <div style="font-size: 3rem; width: 100%; display: flex; flex-flow: row; position: relative; ;left: 22rem;">
-            <input type="button" value="See Graph" onclick="location.href='@Url.Action("JSON", "Simulation")'" />
-            <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16" onclick="location.href='@Url.Action("JSON", "Simulation")'">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
-            </svg>
-            @*<button type="button" class="btn btn-primary btn-rounded">@Html.ActionLink("Click Here To See Graphs", "JSON")</button>*@
+    <div class="col-md-5">
+        <div>
+            <table id="myPMOverAll" class="table" style="background-color: lightgray; color: black; width: 200px; height: 100px;">
+                <thead id="PMHead">
 
+                </thead>
+                <tbody id="PMBody">
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <br />
+
+        <br />
+        <br />
+
+        <div class="text-center">
+            <div style="font-size: 2rem; width: 100%; display: flex; flex-flow: row;">
+                <input style="background-color: darkslategray; color: white;" type="button" value="Click here to See Graph" onclick="location.href='@Url.Action("JSON", "Simulation")'" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16" onclick="location.href='@Url.Action("JSON", "Simulation")'">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                </svg>
+                @*<button type="button" class="btn btn-primary btn-rounded">@Html.ActionLink("Click Here To See Graphs", "JSON")</button>*@
+
+            </di    v>
         </div>
     </div>
 </div>
@@ -163,6 +184,8 @@
         $("#inputField").empty();
         $("#tableRowData").empty();
         $("#myPM").empty();
+        $("#PMHead").empty();
+        $("#PMBody").empty();
         $("#noData").hide();
         $("#myLoader").show();
         $("#myLoader").removeAttr('hidden');
@@ -186,6 +209,7 @@
                     $("#myLoader").hide();
                     var dataa = data[0];
                     var dataa2 = data[1];
+                    var dataa3 = data[2];
                     for (var i = 0; i < dataa.length; i++) {
                         var cust = i + 1;
                         $("#tableRowData").append('<tr><td>C' + cust + '</td><td>' + dataa[i].interArrival + '</td><td>' + dataa[i].arrival + '</td><td>' + dataa[i].serviceTime + '</td><td>' + dataa[i].startTime + '</td><td>' + dataa[i].endTime + '</td><td>' + dataa[i].turnaroundTime + '</td><td>' + dataa[i].waitTime + '</td><td>' + dataa[i].server + '</td></tr>')
@@ -193,6 +217,9 @@
                     $("#pm").removeAttr('hidden');
                     $("#pm").show();
                     $("#myPM").append('<h2><b><u>Performance Measure of MM2 </u></b></h2><br /><p class="lead"><b>Average Length of the Queue (Lq) :&nbsp; ' + dataa2[0] + '</b></p><p class="lead"><b>Average Wait Time of the Queue (Wq) :&nbsp; ' + dataa2[1] + '</b></p><p class="lead"><b>Average Wait Time in the System (W) :&nbsp; ' + dataa2[2] + '</b></p><p class="lead"><b>Average Length of the System (L) :&nbsp; ' + dataa2[3] + '</b></p><p class="lead"><b>Idle Time (idle) :&nbsp; ' + dataa2[4] + '</b></p>')
+                    $("#PMHead").append('<tr><td><b>Avg ArrivalTime  </b></td><td><b>Avg ServiceTime  </b></td><td><b>Avg TurnaroundTime  </b></td><td><b>Avg WaitTime  </b></td></tr><br/>');
+                    /*$("#myPMOverAll").append('<br/>');*/
+                    $("#PMBody").append('<tr><td>' + dataa3[0] + '</td><td>' + dataa3[1] + '</td><td>' + dataa3[2] + '</td><td>' + dataa3[3] + '</td></tr>');
                 }
             });
         }

@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>Chi Square Test</h1>
+<br />
+<p style="color: darkgreen;">Upload Excel File to Run a "Goodness Of Fit-Test" !</p>
+<br />
+<input id="fileupload" type="file" name="file-upload" />
+<br />
+<div style="padding-top: 2rem;">
+    <button style="background-color:darkslategrey; color: white;" class="btn btn-default" id="upload-button" type="submit" onclick="uploadFile();">Upload And Run Test</button>
+    <button style="margin-left: 2rem; background-color: black; color: white; border: none;" id="ReloadBtn" hidden>@Html.ActionLink("Click to Reload","Index","ChiSquare")</button>
+
+</div>
+<br />
+<br />
+<div style="display: flex; justify-content: center; align-content: center; align-items: center;">
+    <div id="chiSquareRes" class="text-center" style="background-color: black; width: 80%; height: 50%; display:block; color: white; border: 1px solid black;" hidden>
+
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+    function uploadFile() {
+        debugger;
+        var files = document.getElementById('fileupload').files;
+        try {
+            var reader = new FileReader();
+            reader.readAsBinaryString(files[0]);
+            var jsonData;
+            reader.onload = function (e) {
+
+                var data = e.target.result;
+                var workbook = XLSX.read(data, {
+                    type: 'binary'
+                });
+                var result = {};
+                var firstSheetName = workbook.SheetNames[0];
+                //reading only first sheet data
+                jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName]);
+                var interArrivalTime = 0;
+                var serviceTime = 0;
+                var interArrival_Array = [];
+                var serviceTime_Array = [];
+
+                for (var i = 0; i < jsonData.length; i++) {
+                    var row = jsonData[i];
+                    interArrival_Array[i] = parseInt(row["InterArrival"]);
+                    serviceTime_Array[i] = parseInt(row["Service Time"]);
+                }
+                debugger;
+                var inputData = {
+                    numOfBins: 4,
+                    interArrivalArray: interArrival_Array,
+                    serviceTimeArray: serviceTime_Array
+                }
+            $.ajax(
+            {
+                type: "POST",
+                url: '@Url.Action("Index", "ChiSquare")',
+                data: JSON.stringify(inputData),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    debugger;
+                    var IAChiSq = data[0];
+                    var STChiSq = data[1];
+                    var CriticalVal = 7.815
+                    $("#chiSquareRes").removeAttr('hidden');
+                    $("#ReloadBtn").removeAttr('hidden');
+                    $("#upload-button").attr("disabled", true);
+                    if (IAChiSq < CriticalVal && STChiSq < CriticalVal) {
+                        $("#chiSquareRes").append('<h2 style="color: darkgreen;">"Chi Square Proved !"</h2><br /><h3>Inter-Arrival Chi Square Test : ' + IAChiSq + ' </h3> <h3> Service - Time Chi Square Test : ' + STChiSq + '</h3> <h3> Critical Value For Chi Square Test : ' + CriticalVal + '</h3> <br /> <strong> <h4 style="color: darkslategray;">Since calculated values of both interArrival and service time are less than critical value, so we can conclude that Given data follows Exponential Distribution</h4> </strong>');
+                    }
+                    else {
+                        $("#chiSquareRes").append('<h2 style="color: darkred;">"Chi Square did not Proved!"</h2><br /><h3>Inter-Arrival Chi Square Test : ' + IAChiSq + ' </h3> <h3> Service - Time Chi Square Test : ' + STChiSq + '</h3> <h3> Critical Value For Chi Square Test : ' + CriticalVal + '</h3> <br /> <strong> <h4 style="color: darkred;">Since calculated values of one or both interArrival and service time are greater than critical value, so we can conclude that Given data does not follow Exponential Distribution</h4> </strong>');
+                    }
+
+                }
+            });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        console.log(jsonData);
+    }
+
+</script>

@@ -53,13 +53,35 @@ namespace OR_Project.Controllers
                     serviceTimes[i] = serviceValue;
                 }
                 dynamic[] SimulationData = SimulationFormulas.GenerateSimulation(interArrivals, serviceTimes, collection.NoOfServers);
-
+                int SumAT = 0, SumST = 0, SumTAT = 0, SumWT = 0;
+                for(int j = 0; j < SimulationData.Length; j++)
+                {
+                    SumAT += SimulationData[j].arrival;
+                    SumST += SimulationData[j].serviceTime;
+                    SumTAT += SimulationData[j].turnaroundTime;
+                    SumWT += SimulationData[j].waitTime;
+                }
+                float AvgAT = SumAT/SimulationData.Length;
+                float AvgST = SumST/SimulationData.Length;
+                float AvgTAT = SumTAT/SimulationData.Length;
+                float AvgWT = SumWT/SimulationData.Length;
+                float[] perfMeas = new float[4];
+                perfMeas[0] = AvgAT;
+                perfMeas[1] = AvgST;
+                perfMeas[2] = AvgTAT;
+                perfMeas[3] = AvgWT;
                 float[] data = MMC_Formulas.MMC(collection.MIAT, collection.MST, collection.NoOfServers);
+                float[] myData = new float[data.Length];
+                for (int i = 0; i < data.Length; i++)
+                {
+                    myData[i] = Math.Abs(data[i]);
+                }
                 TempData["HeadEX"] = "MM" + collection.NoOfServers;
                 TempData["DataaEX"] = SimulationData;
-                dynamic[] myDataa = new dynamic[2];
+                dynamic[] myDataa = new dynamic[3];
                 myDataa[0] = SimulationData;
-                myDataa[1] = data;
+                myDataa[1] = myData;
+                myDataa[2] = perfMeas;
 
                 return Json(myDataa,JsonRequestBehavior.AllowGet);
             }

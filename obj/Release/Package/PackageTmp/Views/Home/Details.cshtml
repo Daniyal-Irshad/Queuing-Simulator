@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "PerformanceMeasure";
+}
+
+
+
+
+<h1 class="text-center"><b><u>Queuing Simulator (OR Project)</u></b></h1>
+<h4 class="text-center"><b>Presented To Miss.Shaista Raees</b></h4>
+<br />
+<br />
+
+<div class="row">
+
+    <div id="pm" class="jumbotron text-center" style="display:block; color: black;">
+        <h2><b><u>Performance Measure of @ViewBag.Head</u></b></h2>
+        <br />
+
+        <p class="lead"><b>Average Length of the Queue (Lq) :&nbsp; @ViewBag.Data[0]</b></p>
+        <p class="lead"><b>Average Wait Time of the Queue (Wq) :&nbsp; @ViewBag.Data[1]</b></p>
+        <p class="lead"><b>Average Wait Time in the System (W) :&nbsp; @ViewBag.Data[2]</b></p>
+        <p class="lead"><b>Average Length of the System (L) :&nbsp; @ViewBag.Data[3]</b></p>
+        <p class="lead"><b>Idle Time (idle) :&nbsp; @ViewBag.Data[4]</b></p>
+
+
+    </div>
+    <div>@Html.ActionLink("Back To Calculate", "Index", "Home")</div>
+</div>
+
